@@ -1,0 +1,34 @@
+Shift Scheduling App
+
+Repo Link: https://github.com/GuardianBob/ShiftScheduler
+
+Idea came from my wife's work, an emergency vet hospital, where they still build shift schedules in a spreadsheet on google drive.  
+The scheduler will have the main calendar on the home screen, displaying all currently scheduled shifts.
+
+Users will have a profile page where they can update contact information and see the total number of shifts they have scheduled for the month and year.
+	- Doctors often have to spend time manually totaling the number of shifts they've worked.  They also have to deal with identifying what time of shift it was.
+	
+Admins will be able to add shifts, update the schedule, and modify other attributes such as shift-type coloring.
+
+Admins will have access to a page that shows total shifts planned for each doctor for the month and year, allowing for faster and more accurate balancing of shifts.
+
+Users will be able to create a login in order to be able to view the schedule.
+
+Admins will also be able to add users.
+
+Initial Functionality:
+	- User Registration/Login
+	- View calendar with shifts listed on each day
+	- Schedule Doctor for shifts
+	- User Profile with contact information
+	- Shift count per doctor for month/year
+	- Add/Edit/Delete Shift
+	- Add/Edit/Delete Shift Type
+
+Additional Functionality that can be added later:
+	- Announcement system to send emails to all doctors
+	- Time off and schedule switch system for doctors to put in documented requests for time off or to swap shifts with another doctor
+	- Semi-automated scheduling for individual doctors: Admin can select the doctor, shift, and what days of the month to pre-populate.
+	- Calendar view for scheduling individual doctors.
+	- Export to different file types (xml, csv, etc.)
+	- Automated notifications of shift changes/updates.
