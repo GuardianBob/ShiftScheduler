@@ -1,0 +1,57 @@
+Home
+    - Calendar
+        - Filter by individual (Extra)
+        - Filter by shift (Extra)
+Schedule
+    - List View
+    - Calendar View (Extra)
+    - Individual View (Extra)
+Admin
+    - Manage Vets
+        - Add/Edit User
+        - Edit User Type
+        - View Shift Count (Month/Year)
+    - Manage Shifts
+    - Export CSV/XML (Extra)
+
+    - View Totals
+Profile
+
+======= Data ===========
+User - Table
+    - First Name
+    - Last Name
+    - Email
+    - User Level
+    - User Type (Supervisor/Doctor/Intern/Technician/IT/Etc.)
+
+Address (optional) - Table
+    - House Number
+    - Street
+    - Apt 
+    - City
+    - State
+    - Zip 
+
+Shift - Table 
+    - Shift  (ex: 8am - 8pm)
+    - Start Time
+    - End Time
+
+ShiftType
+    - Name
+    - Color
+
+ScheduleShift
+    - Date 
+    - Shift ==> Shift
+    - Shift Type ==> ShiftType
+    - Doctor ==> User
+
+Requests (Extra)
+    - RequestUser
+    - SwitchUser (For switches)
+    - Type (Vacation/Switch/CE/Etc.)
+    - Request Start Date
+    - Request End Date
+    - Approve
