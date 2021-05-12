@@ -1,0 +1,17 @@
+{% extends "calendar.html" %}
+{% load static %}
+
+{% block events %}
+defaultDate: '{{ cal_date }}',
+navLinks: true, // can click day/week names to navigate views
+editable: true,
+eventLimit: true, // allow "more" link when too many events
+events: [            
+    {% for shift in schedule %}
+        {
+            title: 'Dr. {{ shift.user.last_name }}',
+            start: '{{ shift.date|date:"Y-m-d" }}T{{ shift.shift.start_time|date:"H" }}:00:00'
+        },
+    {% endfor %}                    
+]
+{% endblock %}

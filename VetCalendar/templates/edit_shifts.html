@@ -12,6 +12,9 @@
 </head>
 <body>
     <div class="container">
+        {% for shift in shifts %}
+            <p>{{ shift.shift }}</p>
+        {% endfor %}
         <form action="update_shifts" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -21,6 +24,9 @@
         </form>
     </div>
     <div class="container">
+        {% for type in types %}
+            <p>{{ type.name }}</p>
+        {% endfor %}
         <form action="update_types" method="post">
             {% csrf_token %}
             <div class="form-group">

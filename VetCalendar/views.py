@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
-import datetime
+from datetime import datetime, date
 from .forms import ShiftForm, ShiftTypeForm, ScheduleShiftForm, RequestForm
 from loginApp.forms import UpdateUserForm, UpdatePasswordForm
 from loginApp.models import User, Address
 from .models import Shift, ShiftType, ScheduleShift, Request
 import bcrypt
 from django.template import loader
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from dateutil import relativedelta
+
 
 def validate_user(request):
     if not 'user_id' in request.session:
@@ -22,8 +24,21 @@ def index(request):
     if not 'user_id' in request.session:
         return redirect('/login')
     else:
-        context = {
+        cal_date = date.today()
+        # year = cal_date.strftime('%Y')
+        # month = cal_date.strftime('%m')
+        # shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)
+        # events = {}
+        # for shift in shifts:
+        #     start_date = datetime.strftime(shift.date, "%Y-%m-%d")  
+        #     new_event = {
+        #         "title" : f'Dr. {shift.user.last_name}',
+        #         "start" : start_date
+        #     }
 
+        context = {
+            'cal_date': cal_date.strftime("%Y-%m-%d"),
+            # 'schedule' : events,
         }
         return render(request, 'calendar.html', context)
 
@@ -158,6 +173,8 @@ def manage_shifts(request):
     context = {
         'shift_form' : ShiftForm(),
         'type_form' : ShiftTypeForm(),
+        'shifts': Shift.objects.all(),
+        'types': ShiftType.objects.all(),
     }
     return render(request, 'edit_shifts.html', context)
 
@@ -169,12 +186,110 @@ def sched_list(request):
 
 def schedule_shifts(request):
     validate_admin(request)
-    user_id = request.session['user_id']
+    user_id = request.session['user_id']    
     context = {
         'form' : ScheduleShiftForm(),
         'action': 'update_schedule',
+        'schedule' : ScheduleShift.objects.all(),
     }
     return render(request, 'schedule.html', context)
 
 def update_schedule(request):
-    pass
+    if request.method != 'POST':
+        return redirect('/')
+    form = ScheduleShiftForm(request.POST)
+    if not form.is_valid():
+        context = {
+            'form' : form,
+        }
+        return render(request, 'schedule.html', context)       
+    # print(request.POST)
+    user = User.objects.get(id=request.POST['user'])
+    shift = Shift.objects.get(id=request.POST['shift'])
+    shift_type = ShiftType.objects.get(id=request.POST['shift_type'])
+    shedule_shift = ScheduleShift.objects.create(date=request.POST['date'], shift=shift, shift_type=shift_type, user=user)
+    return redirect('/schedule') 
+
+def update_shifts(request):
+    if request.method != 'POST':
+        return redirect('/')
+    form = ShiftForm(request.POST)
+    if not form.is_valid():
+        context = {
+            'shift_form' : form,
+        }
+        return render(request, 'edit_shifts.html', context)
+    start_time = get_ampm(request.POST['start_time'][:2])
+    end_time = get_ampm(request.POST['end_time'][:2])
+    # print(start_time + "-" + end_time)
+    shift = Shift.objects.create(shift=start_time + "-" + end_time, start_time=request.POST['start_time'], end_time=request.POST['end_time'])
+    return redirect('/manage_shifts') 
+
+def get_ampm(time):
+    time_s = int(time) - 12
+    if 22 > int(time) > 11:        
+        time_ampm = '0' + str(time_s) + 'pm'
+    elif int(time) > 21:
+        time_ampm = str(time_s) + 'pm'
+    else:
+        time_ampm = time + 'am'
+    return time_ampm
+
+def update_types(request):
+    if request.method != 'POST':
+        return redirect('/')
+    form = ShiftTypeForm(request.POST)
+    if not form.is_valid():
+        context = {
+            'type_form' : form,
+        }
+        return render(request, 'edit_shifts.html', context)
+    shift_type = ShiftType.objects.create(name=request.POST['name'], color=request.POST['color'])
+    return redirect('/manage_shifts') 
+
+def get_shifts(request, date, change):       
+    # print(date, change) 
+    if change == "next":        
+        response = next_month(date)
+    elif change == "prev":
+        response = prev_month(date)
+    else:
+        response = filter_shifts(date)    
+    print(response)    
+    return JsonResponse(response)
+
+def next_month(date):
+    cur_date = datetime.strptime(date, "%Y-%m-%d")    
+    add_month = relativedelta.relativedelta(months=1)
+    new_date = datetime.strftime(cur_date + add_month, "%Y-%m-%d")
+    response = filter_shifts(new_date)
+    return response
+
+def prev_month(date):
+    cur_date = datetime.strptime(date, "%Y-%m-%d")    
+    add_month = relativedelta.relativedelta(months=1)
+    new_date = cur_date - add_month
+    response = filter_shifts(new_date)
+    return response
+
+def filter_shifts(new_date):
+    date = datetime.strptime(new_date, "%Y-%m-%d")
+    year = date.strftime('%Y')
+    month = date.strftime('%m')
+    shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)    
+    # print(shifts)
+    events = []
+    i = 0
+    for shift in shifts:
+        start_date = datetime.strftime(shift.date, "%Y-%m-%d")  
+        events.append({
+                "title" : f'Dr. {shift.user.last_name}',
+                "start" : start_date
+        })
+        i += 1     
+    # print(events)
+    response = {
+        'cal_date': date.strftime("%Y-%m-%d"),
+        'schedule' : events,
+    }
+    return response

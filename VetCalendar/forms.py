@@ -19,18 +19,20 @@ for doctor in doctor_objs:
 shift_objs = Shift.objects.all().values_list('id', 'shift')
 shift_list = [('', ' ')]
 for shift in shift_objs:
-    shift_list.append((f'{shift[0]}', f'Dr. {shift[1]}',))
+    shift_list.append((f'{shift[0]}', f'{shift[1]}',))
+# print(shift_list)
 
 shiftType_objs = ShiftType.objects.all().values_list('id', 'name')
 shift_type_list = [('', ' ')]
 for shiftType in shiftType_objs:
-    shift_type_list.append((f'{shiftType[0]}', f'Dr. {shiftType[1]}',))
+    shift_type_list.append((f'{shiftType[0]}', f'{shiftType[1]}',))
+# print(shift_type_list)
 
 class ScheduleShiftForm(forms.Form):
     user = forms.ChoiceField(widget=forms.Select, choices=doc_list, required=True)
     date = forms.DateTimeField(widget=Date_In, required=True)
-    shift = forms.ChoiceField(widget=forms.Select, choices=Shift.objects.all(), required=True)
-    shift_type = forms.ChoiceField(widget=forms.Select, choices=ShiftType.objects.all(), required=True, initial=0)
+    shift = forms.ChoiceField(widget=forms.Select, choices=shift_list, required=True)
+    shift_type = forms.ChoiceField(widget=forms.Select, choices=shift_type_list, required=True, initial=0)
 
     def __init__(self, *args, **kwargs):
         super(ScheduleShiftForm, self).__init__(*args, **kwargs)
@@ -81,7 +83,7 @@ class ShiftForm(forms.Form):
                 self.errors[f"{varName}"] = self.error_class([f'{message}'])
                 print('time failed')
 
-        check_time_after(end_time, start_time, 'end_time','End time is invalid.')
+        # check_time_after(start_time, end_time, 'end_time','End time is invalid.')
 
         return self.cleaned_data
 
