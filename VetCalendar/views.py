@@ -268,7 +268,7 @@ def next_month(date):
 def prev_month(date):
     cur_date = datetime.strptime(date, "%Y-%m-%d")    
     add_month = relativedelta.relativedelta(months=1)
-    new_date = cur_date - add_month
+    new_date = datetime.strftime(cur_date - add_month, "%Y-%m-%d")
     response = filter_shifts(new_date)
     return response
 
