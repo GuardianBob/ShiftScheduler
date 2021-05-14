@@ -249,12 +249,13 @@ def update_types(request):
 
 def get_shifts(request, date, change):       
     # print(date, change) 
-    if change == "next":        
-        response = next_month(date)
-    elif change == "prev":
-        response = prev_month(date)
-    else:
-        response = filter_shifts(date)    
+    # if change == "next":        
+    #     response = next_month(date)
+    # elif change == "prev":
+    #     response = prev_month(date)
+    # else:
+    # print(date)
+    response = filter_shifts(date)    
     print(response)    
     return JsonResponse(response)
 
@@ -276,15 +277,16 @@ def filter_shifts(new_date):
     date = datetime.strptime(new_date, "%Y-%m-%d")
     year = date.strftime('%Y')
     month = date.strftime('%m')
-    shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)    
-    # print(shifts)
+    shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)        
     events = []
     i = 0
     for shift in shifts:
         start_date = datetime.strftime(shift.date, "%Y-%m-%d")  
+        start_time = str(shift.shift.start_time)
         events.append({
                 "title" : f'Dr. {shift.user.last_name}',
-                "start" : start_date
+                "start" : start_date, 
+                "time" : start_time,
         })
         i += 1     
     # print(events)

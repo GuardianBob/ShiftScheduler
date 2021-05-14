@@ -11,6 +11,7 @@ function build_cal(cal_date) {
     //     // },
     // })
     $('#calendar').fullCalendar({        
+        timeZone: 'local',
         header: {
             left: 'prev,next today',
             center: 'title',
@@ -27,22 +28,27 @@ function build_cal(cal_date) {
 };        
 
 function format_date(date) {
+    // console.log("Date: " + date);
     var dd = String(date.getDate()).padStart(2, '0');
     var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = date.getFullYear(); 
+    // console.log(mm, dd);
     return yyyy + '-' + mm  + '-' + dd
 }
 
 function add_events(schedule){
-    console.log(schedule);  
+    // console.log(schedule);  
     var myCalendar = $('#calendar'); 
+    myCalendar.fullCalendar('removeEvents');
     myCalendar.fullCalendar();
     schedule.forEach((item)=>{
-        // console.log(item.title.toString())
+        // console.log(item.start.toString())
+        var new_start = item.start.toString() + "T" + item.time.toString()
         var myEvent = {
             title: "" + item.title.toString() + "",
-            start: "'" + item.start.toString() + "'"
+            start: new_start
         };
+        // console.log(new_start)
         myCalendar.fullCalendar( 'renderEvent', myEvent );
     });
 }
@@ -66,69 +72,38 @@ function get_shifts(date, change) {
 }
 
 var pageDate = new Date()
-var calDate = format_date(pageDate);
+var initDate = format_date(pageDate);
 
-$(document).ready(function() {       
-    console.log(calDate); 
-    build_cal(calDate);    
-    var data = get_shifts(calDate, "none");
+$(document).ready(function() {               
+    build_cal(initDate);
+    // var getDate = $('#calendar').fullCalendar('getDate').format();
+    // calDate = format_date(new Date(getDate));
+    get_shifts(initDate, "none");
     //var schedule = {{ schedule }};
-    // console.log(data)
+    // console.log(initDate)
     // fillCal(data.calDate, data.schedule);
     $('.fc-next-button').click(function() {
-        console.log("clicked!");  
+        // console.log("clicked!");
+        var getDate = $('#calendar').fullCalendar('getDate').format();
+        calDate = format_date(new Date(getDate));
+        // var view = $('#calendar').fullCalendar('getView');
+        // console.log(view.type);
         get_shifts(calDate, "next");
-        pageDate.setMonth(pageDate.getMonth()+1);
-        calDate = format_date(pageDate);
+        // pageDate.setMonth(pageDate.getMonth()+1);
+        // calDate = format_date(pageDate);
     });
     $('.fc-prev-button').click(function() {
-        console.log("clicked!");  
+        // console.log("clicked!"); 
+        var getDate = $('#calendar').fullCalendar('getDate').format();
+        calDate = format_date(new Date(getDate));
+        // console.log(calDate);
         get_shifts(calDate, "prev");
-        pageDate.setMonth(pageDate.getMonth()-1);
-        calDate = format_date(pageDate);
+        // pageDate.setMonth(pageDate.getMonth()-1);
+        // calDate = format_date(pageDate);
+    });
+    $('.fc-today-button').click(function() {
+        var getDate = $('#calendar').fullCalendar('getDate').format();
+        calDate = format_date(new Date(getDate));
+        get_shifts(calDate);
     });
 });  
-
-
-// $(document).ready(function() {
-//     var today = new Date();
-//     $('#calendar').fullCalendar({        
-//         header: {
-//             left: 'prev,next today',
-//             center: 'title',
-//             right: 'month,basicWeek,basicDay'
-//         },
-//         defaultDate: today,
-//         navLinks: true, // can click day/week names to navigate views
-//         editable: true,
-//         eventLimit: true, // allow "more" link when too many events
-//         events: [     
-//             {
-//                 title: 'All Day Event',
-//                 start: '2021-05-01'
-//             },
-//             {
-//                 title: 'Long Event',
-//                 start: '2021-05-07',
-//                 end: '2021-05-10'
-//             },
-//             {
-//                 id: 999,
-//                 title: 'Repeating Event',
-//                 start: '2021-05-09T16:00:00'
-//             },
-//             {
-//                 id: 999,
-//                 title: 'Repeating Event',
-//                 start: '2021-05-16T16:00:00'
-//             },
-//             {
-//                 title: 'Conference',
-//                 start: '2021-05-11',
-//                 end: '2021-05-13'
-//             }
-//         ]
-//     });
-    
-// });
-
