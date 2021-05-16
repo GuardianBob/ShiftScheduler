@@ -57,10 +57,19 @@ def validate_register(request):
         if len(User.objects.all()) == 0:
             level = True
         user = User.objects.create(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], password=uPass, user_level=level)
-        if not 'user_id' in request.session:        
-            request.session["user_id"] = user.id
-        return redirect('/')
+        return True
+
+def add_new_user(request):
+    validate_register(request)
+    return redirect('/')
     
+def new_registration(request):
+    if validate_register(request) == True:
+        if not 'user_id' in request.session:  
+            user = User.objects.get(email=request.POST['email'])      
+            request.session["user_id"] = user.id
+    return redirect('/')
+
 def validate_login(request):
     if request.method != "POST":
         return redirect("login")

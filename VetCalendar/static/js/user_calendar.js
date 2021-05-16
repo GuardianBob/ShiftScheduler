@@ -53,10 +53,10 @@ function add_events(schedule){
     });
 }
 
-function get_shifts(date) {                      
+function get_shifts(date, user_id) {                      
     var data
     $.ajax({                                        
-        url: "/get_shifts/" + date + "",
+        url: "/get_shifts/" + date + "/" + user_id + "",
         success: function (response){            
             //console.log(response.schedule);
             add_events(response.schedule)
@@ -78,7 +78,7 @@ $(document).ready(function() {
     build_cal(initDate);
     // var getDate = $('#calendar').fullCalendar('getDate').format();
     // calDate = format_date(new Date(getDate));
-    get_shifts(initDate);
+    get_shifts(initDate, "none");
     //var schedule = {{ schedule }};
     // console.log(initDate)
     // fillCal(data.calDate, data.schedule);
@@ -88,7 +88,7 @@ $(document).ready(function() {
         calDate = format_date(new Date(getDate));
         // var view = $('#calendar').fullCalendar('getView');
         // console.log(view.type);
-        get_shifts(calDate);
+        get_shifts(calDate, "next");
         // pageDate.setMonth(pageDate.getMonth()+1);
         // calDate = format_date(pageDate);
     });
@@ -97,7 +97,7 @@ $(document).ready(function() {
         var getDate = $('#calendar').fullCalendar('getDate').format();
         calDate = format_date(new Date(getDate));
         // console.log(calDate);
-        get_shifts(calDate);
+        get_shifts(calDate, "prev");
         // pageDate.setMonth(pageDate.getMonth()-1);
         // calDate = format_date(pageDate);
     });

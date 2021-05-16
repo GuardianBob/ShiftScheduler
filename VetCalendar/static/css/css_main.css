@@ -9,19 +9,8 @@
     
 }
 
-#nav_logo_hidden {
-    display: none;
-    padding: 10px;
-    height: 55px;
-}
-
-#my_name {
-    font-family: 'Press Start 2P', cursive; 
-    font-size: 25px; 
-}
-
-#my_certs {
-    font-size: 12px;
+.fc_content {
+    color:azure;
 }
 
 .sidenav {
@@ -63,25 +52,6 @@
     color: inherit;
 }
 
-.box1 {
-    border: 1px solid black;
-    width: 100px;
-}
-
-.box2 {
-    border: 1px solid black;
-    margin: 10px;
-    padding: 20px 20px;
-}
-
-.box3 {
-    border: 1px solid black;
-    margin: 10px;
-    padding: 5px;
-    height: 120px;
-    overflow: scroll;
-}
-
 .errmsg {
     font-size: 12px;
     color: red;
@@ -92,6 +62,8 @@
     color: red;
     list-style-type: none;
 }
+
+
 /* label {
     display: block;
 } */

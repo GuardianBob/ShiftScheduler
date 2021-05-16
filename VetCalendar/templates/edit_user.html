@@ -1,0 +1,121 @@
+{% extends "admin_nav.html" %}
+{% block title %}Schedule Shifts{% endblock %}
+{% block main %}
+<div class="row justify-content-around my-2">
+    <div class="col-sm-10 justify-content-between">
+        <h4>Edit User: </h4>
+        <h4>{{ user.full_name }}</h4>
+        <p class="text-success" id="">{{ update }}</p>
+    </div>
+</div>
+    <div class="row justify-content-around mx-1">        
+        <div class="col-sm-4 justify-content-center">
+            <form action="{% url 'update_user' %}" method="post" id="user_update">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.email.errors }}
+                    {{ form.email.label_tag }}
+                    <input type="email" name="email" id="email" class="form-control mb-1" value="{{ user.email }}">
+                    {{ form.first_name.errors }}
+                    {{ form.first_name.label_tag }}
+                    <input type="first_name" name="first_name" id="first_name" class="form-control mb-1" value="{{ user.first_name }}">
+                    {{ form.last_name.errors }}
+                    {{ form.last_name.label_tag }}
+                    <input type="last_name" name="last_name" id="last_name" class="form-control mb-1" value="{{ user.last_name }}">
+                    {% if not user.id is 1 and not user.id is 0 %}                    
+                        {% if current_user.user_level is True %}
+                            <label for="user_level">User Level: </label>
+                            <select name="user_level" id="user_level" class="btn btn-outline-secondary dropdown-toggle form-control ">
+                                {% for key, value in level_select.items %}
+                                    {% if user.user_level == key %}                    
+                                        <option value="{{ key }}" selected>{{ value }}</option>
+                                    {% else %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select><br>
+                            <label for="user_type">User Type: </label>
+                            {{ form.user_type }}
+                        {% else %}
+                            <input type="user_level" name="user_level" id="user_level" class="form-control w-75" value="{{ user.user_level }}" hidden>
+                        {% endif %}
+                    {% endif %}
+                    {{ form.address.errors }}
+                    {{ form.address.label_tag }}
+                    <input type="address" name="address" id="address" class="form-control mb-1" value="{{ user.address }}">
+                    {{ form.address_line2.errors }}
+                    {{ form.address_line2.label_tag }}
+                    <input type="address_line2" name="address_line2" id="address_line2" class="form-control mb-1" value="{{ user.address_line2 }}">
+                    {{ form.apt_num.errors }}
+                    {{ form.apt_num.label_tag }}
+                    <input type="apt_num" name="apt_num" id="apt_num" class="form-control mb-1" value="{{ user.apt_num }}">
+                    {{ form.city.errors }}
+                    {{ form.city.label_tag }}
+                    <input type="city" name="city" id="city" class="form-control mb-1" value="{{ user.city }}">
+                    {{ form.state.errors }}
+                    {{ form.state.label_tag }}
+                    {{ form.state }}
+                    {{ form.zipcode.errors }}
+                    {{ form.zipcode.label_tag }}
+                    <input type="zipcode" name="zipcode" id="zipcode" class="form-control mb-1" value="{{ user.zipcode }}">
+                    <input type="user_id" name="user_id" id="user_id" class="form-control mb-1" value="{{ user.id }}" hidden>
+                    <div class="row justify-content-end px-3">
+                        <input type="submit" value="Save" class="px-2 my-2 btn btn-success" id="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% if not user.id is 1 and not user.id is 0 %}
+            <div class="col-sm-4 justify-content-center">
+                <h6>Change Password</h6>
+                <form action="{% url 'update_password' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ password_form.password.errors }}
+                        {{ password_form.password.label_tag }}
+                        <input type="password" name="password" id="password" class="form-control mb-1" >
+                        {{ password_form.check_password.label_tag }}
+                        <span class="errmsg" id="c_pass"></span><br>
+                        <input type="password" name="check_password" id="check_password" class="form-control mb-1">
+                        <input type="user_id" name="user_id" id="user_id" class="form-control mb-1" value="{{ user.id }}" hidden>
+                        <div class="row justify-content-end px-3">
+                            <input type="submit" value="Update Password" class="px-2 my-2 btn btn-success" id="upd_pass">
+                        </div>
+                    </div>
+                </form>            
+            </div>
+        {% endif %}
+    </div>
+    <!-- <div class="col-sm-8"></div> -->
+</div>
+
+<script type="text/javascript">
+    function checkPass() {
+        var reg_pass = $("#reg_password").val();
+        var checkPass = $("#check_pass_r").val();            
+        if ($("#check_pass_r").val() == $("#reg_password").val()) {
+            $("#c_pass").html("");
+            $("#submit").attr("disabled", false);
+        } else {
+            $("#c_pass").html("Passwords do not match!");
+            $("#submit").attr("disabled", true);
+        }
+    }        
+
+    function showPass() {
+        var reg_password = document.getElementById("reg_password");
+        if (reg_password.type === "password") {
+            reg_password.type = "text";
+        } else {
+            reg_password.type = "password";
+        }
+    }
+
+    $(document).ready(function () {
+        //$('#navigation').load('navi.html');
+        $("submit").attr("disabled", true)   
+        $("#check_pass_r").keyup(checkPass);
+    });
+    
+</script>
+{% endblock %}

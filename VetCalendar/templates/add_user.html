@@ -1,0 +1,54 @@
+{% extends "admin_nav.html" %}
+{% block title %}Schedule Shifts{% endblock %}
+{% block main %}
+<div class="row justify-content-around my-2">
+    <div class="col-lg-8 justify-content-between">
+        <h4>Add a New User</h4>
+    </div>
+</div>
+<div class="row justify-content-start mx-2">
+    <div class="container col-sm-4 px-2">
+        <h3>Registration</h3>                                    
+        <form action="{% url 'add_user' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ register_form }}
+                <span class="errmsg" id="c_pass"></span></label><br>
+                <input type="checkbox" onclick="showPass()">  Show Password <hr>
+                <input type="submit" value="Create" class="px-2 my-2 btn btn-success" id="submit" disabled>
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-8"></div>
+</div>
+
+<script type="text/javascript">
+    function checkPass() {
+        var reg_pass = $("#reg_password").val();
+        var checkPass = $("#check_pass_r").val();            
+        if ($("#check_pass_r").val() == $("#reg_password").val()) {
+            $("#c_pass").html("");
+            $("#submit").attr("disabled", false);
+        } else {
+            $("#c_pass").html("Passwords do not match!");
+            $("#submit").attr("disabled", true);
+        }
+    }        
+
+    function showPass() {
+        var reg_password = document.getElementById("reg_password");
+        if (reg_password.type === "password") {
+            reg_password.type = "text";
+        } else {
+            reg_password.type = "password";
+        }
+    }
+
+    $(document).ready(function () {
+        //$('#navigation').load('navi.html');
+        $("submit").attr("disabled", true)   
+        $("#check_pass_r").keyup(checkPass);
+    });
+    
+</script>
+{% endblock %}

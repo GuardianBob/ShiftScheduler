@@ -1,0 +1,20 @@
+{% extends "admin_nav.html" %}
+{% load static %}
+
+{% block title %}Schedule Shifts{% endblock %}
+
+{% block calendar_js %}
+<script src="{% static 'js/schedule_calendar.js' %}"></script>
+{% endblock %}
+{% block main %}
+<div class="row">
+    <div class="col-md-4 mx-2">
+        <h3>Clear Selected Month</h3>
+        <form action="clear_month" method="post">
+            {% csrf_token %}
+            <input type="date" name="clear_month" id="clear_month">
+            <button type="submit" class="btn btn-danger">Clear</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

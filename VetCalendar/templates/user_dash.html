@@ -1,0 +1,53 @@
+{% extends "admin_nav.html" %}
+{% block title %}Schedule Shifts{% endblock %}
+{% block main %}
+<div class="col-lg-8 justify-content-between">
+    <h4>Manage Users</h4>
+    {% if admin is True %}
+        <a class="btn btn-primary px-3 my-2" href="{% url 'new_user' %}" role="button">Add New</a>
+    {% endif %}
+</div>
+    <div class="row justify-content-around">
+        <div class="col-md-8">
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">User Level</th>
+                        {% if admin is True %}
+                            <th scope="col">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td><a href="{% url 'user_info' user.id %}">{{ user.full_name }}</a></td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.created_at }}</td>
+                            <td>
+                                {% if user.user_level is True %}
+                                    Admin
+                                {% else %}  
+                                    Normal
+                                {% endif %}
+                            </td>
+                            {% if admin is True %}
+                                
+                                    <td>
+                                        <a href="{% url 'edit_user' user.id %}">Edit</a>
+                                        <span> | </span>
+                                        <a href="{% url 'remove_user' user.id %}">Remove</a>
+                                    </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

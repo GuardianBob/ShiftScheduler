@@ -1,34 +1,34 @@
 <div class="row px-0" style="margin: auto;" id="navigation">
     <img src="static/img/python_settings_white.png" alt="click to hide" id="nav_logo_hidden" height="55px" class="align-top bg-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Toggle Nav Menu">
-    <nav class="navbar navbar-dark bg-dark navbar-expand-sm fixed-top" id="nav-bar">             
-        <!-- <div class="container-fluid">                 -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav_menu" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-between" id="nav_menu">
-                <div class="navbar-brand align-center">           
-                    <img src="static/img/python_settings_white.png" alt="click to hide" id="nav_logo" height="35px" class="align-top bg-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Toggle Nav Menu">                        
-                    <span id="my_name">Jesse Meyer</span>            
-                    <span id="my_certs" > MSMIS / PMP / CSM / Full-Stack Developer </span>
-                </div>       
-                <ul class="navbar-nav" id="nav_links">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">About</a>
-                    </li>
-                    <li class="nav-item dropdown bg-dark">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Projects
-                        </a>
-                        <ul class="dropdown-menu bg-dark text-light" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item text-light" href="#">Project 1</a></li>
-                            <li><a class="dropdown-item text-light" href="#">Project 2</a></li>
-                            <li><a class="dropdown-item text-light" href="#">Project 3</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm fixed-top" id="nav-bar">              
+        <div class="collapse navbar-collapse justify-content-between" id="nav_menu">
+            <div class="navbar-brand align-center">           
+                
+                <span id="title">Vet Schedule</span>  
+            </div>       
+            <ul class="navbar-nav" id="nav_links">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Calendar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Schedule</a>
+                </li>
+                <li class="nav-item dropdown bg-dark">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu bg-dark text-light" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item text-light" href="#">Manage Vets</a></li>
+                        <li><a class="dropdown-item text-light" href="#">Manage Shifts</a></li>
+                        <li><a class="dropdown-item text-light" href="#">Totals</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    {% block login_out %}
+                    <a class="nav-link" aria-current="page" href="#">Schedule</a>
+                    {% endblock %}
+                </li>
+            </ul>
+        </div>
     </nav>
 </div>

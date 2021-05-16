@@ -17,6 +17,7 @@ USER_TYPE_SELECT = (
 )
 
 STATE_SELECT = (
+    ('', ''),
     ('AL', 'Alabama'),
     ('AK', 'Alaska'),
     ('AS', 'American Samoa'),
@@ -189,7 +190,8 @@ class UpdateUserForm(forms.Form):
             # self.fields['description'].widget.attrs.update({
             #     'class' : 'form-control',
             #     'id': 'des',
-            # })
+            # })        
+            self.initial['state'] = 'CA'
         
     def clean(self):
         super(UpdateUserForm, self).clean()

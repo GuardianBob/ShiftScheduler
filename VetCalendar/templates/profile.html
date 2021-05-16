@@ -1,0 +1,71 @@
+{% extends "admin_nav.html" %}
+{% load static %}
+
+{% block calendar_js %}
+<script src="{% static 'js/user_calendar.js' %}"></script>
+
+<script>
+    function get_shifts(date) {                      
+        var data
+        $.ajax({                                        
+            url: "/get_shifts/" + date + "/" + {{ profile.id }} + "",
+            success: function (response){            
+                //console.log(response.schedule);
+                add_events(response.schedule)
+                data = response
+                return response
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                console.log(response.responseJSON.errors)
+            }
+        });    
+        return data;
+    }
+</script>
+{% endblock %}
+
+{% block title %}Profile{% endblock %}
+
+{% block main %}
+<div class="row mx-2">
+    <div class="col-md-4">
+        <div class="row justify-content-between mb-2">
+            <div class="col"><h3>Dr. {{ profile.last_name }}</h3></div>
+            <div class="col-sm-4"><a href="#" class="btn btn-outline-info ">Edit Profile</a></div>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Shift Type</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Year</th>
+                    {% if admin is True %}
+                        <th scope="col">Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>                
+                {% for shift, count in shifts_month.items %}
+                    <tr>
+                        <td>{{ shift }}</td>
+                    {% for m, y in count.items %}
+                        <td>{{ m }}</td>
+                        <td>{{ y }}</td>
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-8">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="ui sixteen column">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
