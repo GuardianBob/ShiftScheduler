@@ -80,7 +80,7 @@ def render_edit_page(request, context, user_id):
         user_level = "Admin"
     add_info = {
         'nav': get_nav(request),
-        # 'admin' : current_user.user_level,
+        'user_level' : current_user.user_level,
         'user': user,
         # 'user_id': current_user.id,
         'current_user': current_user,
@@ -243,7 +243,9 @@ def manage_shifts(request):
     return render(request, 'edit_shifts.html', context)
 
 def admin_tools(request):
-    context = {}
+    context = {
+        'form' : ScheduleShiftForm(),
+    }
     return render(request, 'admin_tools.html', context)
 
 def sched_list(request):
@@ -348,7 +350,7 @@ def delete_multiple(request):
             nDate = datetime.strptime(xDate, "%m-%d-%Y")
             date = nDate.strftime("%Y-%m-%d")
             ScheduleShift.objects.filter(user=user, date=date).delete()
-    return redirect('/schedule')
+    return redirect('/admin_tools')
 
 def update_shifts(request, shift_id=None):
     if request.method != 'POST':
@@ -379,6 +381,22 @@ def remove_shift(request, shift_id):
         return redirect('/') 
     Shift.objects.get(id=shift_id).delete()
     return redirect('/manage_shifts')
+
+def clear_month(request):
+    date = datetime.strptime(request.POST['month_clear'], "%m-%d-%Y")
+    year = date.strftime('%Y')
+    month = date.strftime('%m')
+    ScheduleShift.objects.filter(date__year=year, date__month=month).delete()
+    return redirect('/admin_tools')
+
+def clear_user(request):
+    print("Made it here!")
+    date = datetime.strptime(request.POST['month_clear'], "%m-%d-%Y")
+    year = date.strftime('%Y')
+    month = date.strftime('%m')
+    user= User.objects.get(id=request.POST['user'])
+    ScheduleShift.objects.filter(date__year=year, date__month=month, user=user).delete()
+    return redirect('/admin_tools')
 
 def get_ampm(time):
     time_s = int(time) - 12
@@ -439,12 +457,13 @@ def get_shifts(request, date, user_id=""):
         start_date = datetime.strftime(shift.date, "%Y-%m-%d")  
         start_time = str(shift.shift.start_time)
         events.append({
-                "title" : f'Dr. {shift.user.last_name}',
-                "start" : start_date, 
-                "time" : start_time,
-                "shift_h": shift.shift.shift,
-                "shift_type": shift.shift_type.name,
-                "id": shift.id,
+            "title" : f'Dr. {shift.user.last_name}',
+            "start" : start_date, 
+            "time" : start_time,
+            "shift_h": shift.shift.shift,
+            "shift_type": shift.shift_type.name,
+            "id": shift.id,
+            "color": shift.shift_type.color,
         })
         i += 1     
     # print(events)

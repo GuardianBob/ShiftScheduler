@@ -40,14 +40,16 @@ function add_events(schedule){
     // console.log(schedule);  
     var myCalendar = $('#calendar'); 
     myCalendar.fullCalendar('removeEvents');
-    myCalendar.fullCalendar();
+    // myCalendar.fullCalendar();
     schedule.forEach((item)=>{
         // console.log(item.start.toString())
         var new_start = item.start.toString() + "T" + item.time.toString()
         var myEvent = {
             title: "" + item.title.toString() + "",
-            start: new_start
+            start: new_start,
+            color: "" + item.color.toString() + "",            
         };
+        // console.log(item.color.toString())
         // console.log(new_start)
         myCalendar.fullCalendar( 'renderEvent', myEvent );
     });

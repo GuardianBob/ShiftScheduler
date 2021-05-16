@@ -32,7 +32,7 @@
     <div class="col-md-4">
         <div class="row justify-content-between mb-2">
             <div class="col"><h3>Dr. {{ profile.last_name }}</h3></div>
-            <div class="col-sm-4"><a href="#" class="btn btn-outline-info ">Edit Profile</a></div>
+            <div class="col-sm-4"><a href="{% url 'edit_user' profile.id %}" class="btn btn-outline-info ">Edit Profile</a></div>
         </div>
         <table class="table table-striped">
             <thead class="thead-light">

@@ -4,17 +4,181 @@
 {% block title %}Schedule Shifts{% endblock %}
 
 {% block calendar_js %}
-<script src="{% static 'js/schedule_calendar.js' %}"></script>
+<script src="{% static 'js/admin_calendar.js' %}"></script>
+<script>
+    function update() {
+        console.log($('#calendar').fullCalendar('clientEvents', 80085));
+        $.ajax({                                        
+            url: "" + date + "",
+            success: function (response){            
+                // console.log(response.schedule);
+                // add_events(response.schedule)
+                data = response
+                return response            
+                
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                console.log(response.responseJSON.errors)
+            }
+        });    
+        return data;        
+    }
+    
+</script>
+
 {% endblock %}
+
 {% block main %}
-<div class="row">
-    <div class="col-md-4 mx-2">
-        <h3>Clear Selected Month</h3>
-        <form action="clear_month" method="post">
+
+<div class="row justify-content-between mx-2">
+    <div class="col-sm-4 px-2">    
+        <div class="border p-4">
+            <form action="delete_multiple" method="post">
+                {% csrf_token %}
+                <h4>Clear user from selected dates:</h4>
+                {{ form.user.label }}
+                {{ form.user.errors }}
+                {{ form.user }}
+
+                <label for="multi-date">Dates:</label>
+                <input type="text" name="multi-date" required id="multi-date" class="form-control datepicker" value="Select multiple dates..." autocomplete="off">
+                <input type="submit" value="Clear User" class="btn btn-danger px-2 my-2" id="submit">
+            </form>
+        </div>
+        <div class="border p-4">
+            <form id="clear_user_form" action="{% url 'clear_month' %}" method="post">
             {% csrf_token %}
-            <input type="date" name="clear_month" id="clear_month">
-            <button type="submit" class="btn btn-danger">Clear</button>
-        </form>
+                <h5>Clear all shifts for user from current month</h5>
+                {{ form.user.label }}
+                {{ form.user.errors }}
+                {{ form.user }}
+
+                <input type="text" name="month_clear" id="month_clear" class="form-control" hidden>        
+            </form>
+            <button value="Clear Shifts" class="btn btn-danger px-2 my-2" onclick="verify_clear(1)">Clear Shifts</button>
+        </div>
+        <div class="border p-4">
+            <form id="clear_month_form" action="" method="post">
+            {% csrf_token %}
+                <h5>Clear all shifts for current month</h5>
+                <input type="text" name="month_clear" id="month_clear" class="form-control" hidden>        
+            </form>
+            <button value="Clear Shifts" class="btn btn-danger px-2 my-2" onclick="verify_clear(0)">Clear Shifts</button>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="col-sm-11 justify-content-between m-3 form-inline">
+            <input type="text" class="form-control" name="date-select" id="date-select" />
+        </div>
+        <div class="col-sm-12">
+            <div class="ui container">
+                <div class="ui grid">
+                    <div class="ui sixteen column">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<div id='datepicker'></div>
+<div class="modal hide fade in" tabindex="-1" role="dialog" id="myModal" labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">                
+                <h4 class="modal-title">Create new event</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form action="{{ action }}" method="post" id="modal_form">
+                {% csrf_token %}
+                <div class="modal-body">                
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4 id="modal_date"></h4>
+                            <input type="hidden" name="id" id="id" value="">
+                            <input type="hidden" name="date" id="date" value="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form.user.label }}
+                            {{ form.user.errors }}
+                            {{ form.user }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- <label class="col-sm-4" for="starts-at">Starts at</label>
+                            <input type="text" class="form-control col-sm-8 mx-2" name="starts_at" id="starts-at" /> -->
+                            {{ form.shift.label }}
+                            {{ form.shift.errors }}
+                            {{ form.shift }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- <label class="col-sm-4" for="ends-at">Ends at</label>
+                            <input type="text" class="form-control col-sm-8 mx-2" name="ends_at" id="ends-at" /> -->
+                            {{ form.shift_type.label }}
+                            {{ form.shift_type.errors }}
+                            {{ form.shift_type }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="col-sm-2"><button type="submit" class="btn btn-primary" id="save-event">Update</button></div>                        
+                    <div class="col-sm-2"><button type="submit" class="btn btn-danger" id="delete" formaction="/delete_sched_shift">Delete</button></div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal hide fade in" tabindex="-1" role="dialog" id="clear_month" labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">                
+                <h4 class="modal-title">Please Verify</h4>                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>           
+            <div class="row justify-content-center">
+                <div class="col-sm-10 text-center p-2 m-4"> 
+                    <h3 id="modal_user"></h3>
+                    <h4 id="modal_date"></h4>                    
+                    <p id="warning" class="bg-danger text-light p-4">Are you sure you want to clear all shifts for the selected month?</p>
+                </div>
+            </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="col-sm-2"><button type="submit" class="btn btn-secondary cancel" id="cancel">CANCEL</button></div>                        
+                    <div class="col-sm-2"><button type="submit" class="btn btn-danger" id="clear_entries">Yes</button></div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- <div class="modal hide fade in" tabindex="-1" role="dialog" id="clear_user" labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">                
+                <h4 class="modal-title">Please Verify</h4>                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>           
+            <div class="row justify-content-center">
+                <div class="col-sm-10 text-center p-2 m-4"> 
+                    <h4 id="modal_date"></h4>
+                    <p class="bg-danger text-light p-4">Are you sure you want to clear all shifts for the selected month?</p>
+                </div>
+            </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="col-sm-2"><button type="submit" class="btn btn-secondary cancel" id="cancel">CANCEL</button></div>                        
+                    <div class="col-sm-2"><button type="submit" class="btn btn-danger" id="clear_month" >Yes</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<script>
+    
+</script>
 {% endblock %}

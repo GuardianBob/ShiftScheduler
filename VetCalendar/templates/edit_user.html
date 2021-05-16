@@ -21,8 +21,7 @@
                     <input type="first_name" name="first_name" id="first_name" class="form-control mb-1" value="{{ user.first_name }}">
                     {{ form.last_name.errors }}
                     {{ form.last_name.label_tag }}
-                    <input type="last_name" name="last_name" id="last_name" class="form-control mb-1" value="{{ user.last_name }}">
-                    {% if not user.id is 1 and not user.id is 0 %}                    
+                    <input type="last_name" name="last_name" id="last_name" class="form-control mb-1" value="{{ user.last_name }}">                 
                         {% if current_user.user_level is True %}
                             <label for="user_level">User Level: </label>
                             <select name="user_level" id="user_level" class="btn btn-outline-secondary dropdown-toggle form-control ">
@@ -39,7 +38,6 @@
                         {% else %}
                             <input type="user_level" name="user_level" id="user_level" class="form-control w-75" value="{{ user.user_level }}" hidden>
                         {% endif %}
-                    {% endif %}
                     {{ form.address.errors }}
                     {{ form.address.label_tag }}
                     <input type="address" name="address" id="address" class="form-control mb-1" value="{{ user.address }}">
@@ -65,26 +63,24 @@
                 </div>
             </form>
         </div>
-        {% if not user.id is 1 and not user.id is 0 %}
-            <div class="col-sm-4 justify-content-center">
-                <h6>Change Password</h6>
-                <form action="{% url 'update_password' %}" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ password_form.password.errors }}
-                        {{ password_form.password.label_tag }}
-                        <input type="password" name="password" id="password" class="form-control mb-1" >
-                        {{ password_form.check_password.label_tag }}
-                        <span class="errmsg" id="c_pass"></span><br>
-                        <input type="password" name="check_password" id="check_password" class="form-control mb-1">
-                        <input type="user_id" name="user_id" id="user_id" class="form-control mb-1" value="{{ user.id }}" hidden>
-                        <div class="row justify-content-end px-3">
-                            <input type="submit" value="Update Password" class="px-2 my-2 btn btn-success" id="upd_pass">
-                        </div>
+        <div class="col-sm-4 justify-content-center">
+            <h6>Change Password</h6>
+            <form action="{% url 'update_password' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ password_form.password.errors }}
+                    {{ password_form.password.label_tag }}
+                    <input type="password" name="password" id="password" class="form-control mb-1" >
+                    {{ password_form.check_password.label_tag }}
+                    <span class="errmsg" id="c_pass"></span><br>
+                    <input type="password" name="check_password" id="check_password" class="form-control mb-1">
+                    <input type="user_id" name="user_id" id="user_id" class="form-control mb-1" value="{{ user.id }}" hidden>
+                    <div class="row justify-content-end px-3">
+                        <input type="submit" value="Update Password" class="px-2 my-2 btn btn-success" id="upd_pass">
                     </div>
-                </form>            
-            </div>
-        {% endif %}
+                </div>
+            </form>            
+        </div>
     </div>
     <!-- <div class="col-sm-8"></div> -->
 </div>

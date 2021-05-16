@@ -13,6 +13,8 @@ urlpatterns = [
     path('update_password', views.update_password, name='update_password'),
     path('update_user', views.update_user, name='update_user'),
     path('admin_tools', views.admin_tools, name='admin_tools'),
+    path('clear_month', views.clear_month, name='clear_month'),
+    path('clear_user', views.clear_user, name='clear_user'),
     path('schedule', views.schedule_shifts, name='schedule_users'),
     path('update_schedule', views.update_schedule),
     path('update_shifts', views.update_shifts, name="update_shifts"),
