@@ -15,9 +15,7 @@ def validate_user(id, level="user"):
     if not len(User.objects.filter(id=id)) > 0:
         return False
     user = User.objects.get(id=id)
-    if level == "admin":
-        return user.user_level
-    return True
+    return user.user_level
 
 def validate_admin(request):
     validate_user(request)
@@ -29,31 +27,23 @@ def index(request):
     if not 'user_id' in request.session:
         return redirect('/login')
     else:
+        user = User.objects.get(id=request.session['user_id'])        
         cal_date = date.today()
-        # year = cal_date.strftime('%Y')
-        # month = cal_date.strftime('%m')
-        # shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)
-        # events = {}
-        # for shift in shifts:
-        #     start_date = datetime.strftime(shift.date, "%Y-%m-%d")  
-        #     new_event = {
-        #         "title" : f'Dr. {shift.user.last_name}',
-        #         "start" : start_date
-        #     }
-
+        nav_bar = get_nav(request.session['user_id'])
         context = {
             'cal_date': cal_date.strftime("%Y-%m-%d"),
             # 'schedule' : events,
-            'login_text': 'Logout',
-            'login_link': '{% url '
+            'nav_bar': nav_bar,
         }
         return render(request, 'cal_home.html', context)
 
-def get_nav(request):
-    nav = 'nav_out.html'
-    if 'user_id' in request.session:
-        nav = "nav_in.html"
-    return nav
+def get_nav(user_id):
+    user = User.objects.get(id=user_id)
+    if user.user_level == True:
+            nav_bar = 'admin_nav.html'
+    else:
+        nav_bar = 'user_nav.html'
+    return nav_bar
 
 def validate_level(user_id):
     user = User.objects.get(id=user_id)
@@ -79,7 +69,7 @@ def render_edit_page(request, context, user_id):
     if current_user.user_level is True:
         user_level = "Admin"
     add_info = {
-        'nav': get_nav(request),
+        'nav_bar': get_nav(current_user.id),
         'user_level' : current_user.user_level,
         'user': user,
         # 'user_id': current_user.id,
@@ -121,6 +111,10 @@ def update_password(request):
         return success(request, request.POST['user_id'])
 
 def edit_user(request, user_id):
+    if not user_id == request.session['user_id']:
+        if validate_user(request.session['user_id']) == False:
+            print(validate_user(request.session['user_id']))
+            return redirect('/')
     context = {
         'form' : UpdateUserForm(),
         'password_form' : UpdatePasswordForm(),
@@ -205,9 +199,9 @@ def show_user(request, user_id=None):
         y_count = ScheduleShift.objects.filter(user=profile, date__year=year, shift_type=s_type).count()
         shifts_month.update({s_type.name : {m_count: y_count}})
         # shifts_year.update({s_type.name : y_count})
-    print(shifts_month, shifts_year)    
+    # print(shifts_month, shifts_year) 
     context = {
-        'nav': get_nav(request),
+        'nav_bar': get_nav(user.id),
         'profile': profile,
         'user': user,
         'user_id': user.id,
@@ -222,7 +216,6 @@ def manage_users(request):
     if 'user_id' in request.session:
         user = User.objects.get(id=request.session['user_id'])
     context = {
-        'nav': get_nav(request),
         'admin' : user.user_level,
         'users' : User.objects.all(),
         'user_id': user.id,
@@ -232,7 +225,7 @@ def manage_users(request):
 
 def manage_shifts(request):    
     user = User.objects.get(id=request.session['user_id'])
-    if validate_user(request.session['user_id'], "admin") is False:
+    if validate_user(request.session['user_id']) is False:
         return redirect('/')
     context = {
         'shift_form' : ShiftForm(),
@@ -243,6 +236,8 @@ def manage_shifts(request):
     return render(request, 'edit_shifts.html', context)
 
 def admin_tools(request):
+    if not validate_user(request.session['user_id']) is True:
+        return redirect('/')
     context = {
         'form' : ScheduleShiftForm(),
     }
@@ -275,24 +270,10 @@ def update_schedule(request):
         return redirect('/')
     if validate_user(request.session['user_id'], "admin") is False:
         return redirect('/')
-    # form = ScheduleShiftForm(request.POST)
-    # if not form.is_valid():
-    #     context = {
-    #         'form' : form,
-    #     }
-    #     return render(request, 'schedule.html', context)         
-    # print(f'date: {request.POST["date"]}, id: {request.POST["id"]}')
     if 'multi-date' in request.POST:
         dates = request.POST['multi-date'].split(',')
         for xDate in dates:
             save_shifts(request, xDate)
-            # nDate = datetime.strptime(xDate, "%m-%d-%Y")
-            # date = nDate.strftime("%Y-%m-%d")
-            # # print(xDate)
-            # user = User.objects.get(id=request.POST['user'])
-            # shift = Shift.objects.get(id=request.POST['shift'])
-            # shift_type = ShiftType.objects.get(id=request.POST['shift_type'])
-            # shedule_shift = ScheduleShift.objects.create(date=date, shift=shift, shift_type=shift_type, user=user)
     else:
         update_sched_shift(request, request.POST['date'])
     return redirect('/schedule')

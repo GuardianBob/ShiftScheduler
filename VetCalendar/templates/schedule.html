@@ -78,15 +78,16 @@
                 {{ form.shift_type }}
 
                 <label for="multi-date">Dates:</label>
-                <input type="text" name="multi-date" required id="multi-date" class="form-control datepicker" value="Select multiple dates...">
+                <input type="text" name="multi-date" required id="multi-date" class="form-control datepicker" value="Select multiple dates..." autocomplete="off">
                 <input type="submit" value="Schedule" class="btn btn-primary px-2 my-2" id="submit">
             </div>
         </form>    
         
     </div>
     <div class="col-sm-8">
-        <div class="col-sm-11 justify-content-between m-3 form-inline">
-            <input type="text" class="form-control" name="date-select" id="date-select" />
+        <div class="col-sm-11 justify-content-center m-3 form-inline">
+            <label for="date-select">Jump to date: &nbsp</label>
+            <input type="text" class="form-control-sm " name="date-select" id="date-select" />
         </div>
         <div class="col-sm-12">
             <div class="ui container">

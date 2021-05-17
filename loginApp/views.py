@@ -75,6 +75,7 @@ def validate_login(request):
         return redirect("login")
     check_form = Login_Form(request.POST)
     if not check_form.is_valid():
+        print('failed!')
         register_form = Register_Form()
         context = { 
             'login_form' : check_form,
@@ -82,8 +83,11 @@ def validate_login(request):
             }
         return render(request, 'login.html', context)
     else:
+        print("logged in!")
         user = User.objects.get(email=request.POST['login_email'])
+        print(user.id)
         request.session["user_id"] = user.id
+        print('redirecting!')
         return redirect('/')
 
 # def success(request):
