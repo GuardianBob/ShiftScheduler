@@ -21,6 +21,7 @@ function build_cal(cal_date) {
         navLinks: true, // can click day/week names to navigate views
         editable: true,
         eventLimit: true, // allow "more" link when too many events
+        height: 1200,
         events:[ 
             
         ]
@@ -73,6 +74,27 @@ function get_shifts(date) {
     return data;
 }
 
+function update_shift_list(date) {
+    $.ajax({                                        
+        url: "/get_shift_count/" + date + "",
+        success: function (response){            
+            // console.log(response.shift_count);
+            $("#shift_counts tr").remove();
+            $.each( response.shift_count, function(id, user) {                
+                // console.log(user.name.toString());
+                html = `<tr><td><a href="/users/info/${id}">${user.name.toString()}</a></td><td>${user.month.toString()}</td><td>${user.year.toString()}</td></tr>`;
+                $("#shift_counts").append(html);
+            });
+            shifts = response
+            return shifts         
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            console.log(response.responseJSON.errors)
+        }
+    });
+}
+
 var pageDate = new Date()
 var initDate = format_date(pageDate);
 
@@ -84,28 +106,19 @@ $(document).ready(function() {
     //var schedule = {{ schedule }};
     // console.log(initDate)
     // fillCal(data.calDate, data.schedule);
-    $('.fc-next-button').click(function() {
+    $('.fc-next-button, .fc-prev-button, .fc-today-button, .fc-month-button').click(function() {
         // console.log("clicked!");
-        var getDate = $('#calendar').fullCalendar('getDate').format();
+        var getDate = $('#calendar').fullCalendar('getDate').format("MM-DD-YYYY HH:mm");
+        // console.log("getDate: " + getDate);
+        // console.log("fixed: " + new Date(getDate));
         calDate = format_date(new Date(getDate));
+        // $("#date-select").val(format_date_datepicker(new Date(getDate)));
+        // $("#month_clear").val(format_date_datepicker(new Date(getDate)));
         // var view = $('#calendar').fullCalendar('getView');
-        // console.log(view.type);
+        // console.log("1st: " + calDate);
         get_shifts(calDate);
+        update_shift_list(calDate);
         // pageDate.setMonth(pageDate.getMonth()+1);
         // calDate = format_date(pageDate);
-    });
-    $('.fc-prev-button').click(function() {
-        // console.log("clicked!"); 
-        var getDate = $('#calendar').fullCalendar('getDate').format();
-        calDate = format_date(new Date(getDate));
-        // console.log(calDate);
-        get_shifts(calDate);
-        // pageDate.setMonth(pageDate.getMonth()-1);
-        // calDate = format_date(pageDate);
-    });
-    $('.fc-today-button').click(function() {
-        var getDate = $('#calendar').fullCalendar('getDate').format();
-        calDate = format_date(new Date(getDate));
-        get_shifts(calDate);
     });
 });  

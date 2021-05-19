@@ -9,6 +9,7 @@ LEVEL_SELECT = (
 )
 
 USER_TYPE_SELECT = (
+    ('', ''),
     ('doctor', 'Doctor'),
     ('intern', 'Intern'),
     ('technician', 'Technician'),

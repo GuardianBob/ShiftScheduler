@@ -19,22 +19,7 @@ function build_cal(cal_date) {
         eventLimit: true, // allow "more" link when too many events
         selectable: true,
         selectHelper: true,
-        // Select multiple dates on calendar
-        // select: function (start, end, jsEvent, view) {
-        //     $("#calendar").fullCalendar('addEventSource', [{
-        //         start: start,
-        //         end: end,
-        //         rendering: 'background',
-        //         block: true,
-        //         id: 80085,
-        //     }, ]);
-        //     $("#calendar").fullCalendar("unselect");         
-        // },
-        // selectOverlap: function(event) {
-        //     return ! event.block;
-        // },
-
-        // modal selection
+        height:900,
         select: function(start, end) {
             // Display the modal.
             // You could fill in the start and end fields based on the parameters
@@ -110,7 +95,7 @@ function add_events(schedule){
     // console.log(schedule);  
     var myCalendar = $('#calendar'); 
     myCalendar.fullCalendar('removeEvents');
-    myCalendar.fullCalendar();
+    // myCalendar.fullCalendar();
     schedule.forEach((item)=>{
         // console.log(item)
         var new_start = item.start.toString() + "T" + item.time.toString()
@@ -135,16 +120,37 @@ function get_shifts(date) {
         success: function (response){            
             // console.log(response.schedule);
             add_events(response.schedule)
-            data = response
-            return response            
-            
+            // update_shift_list(response.schedule)
+            data = response.schedule
+            return data         
         },
         error: function (response) {
             // alert the error if any error occured
             console.log(response.responseJSON.errors)
         }
     });    
-    return data;
+    // return data;
+}
+
+function update_shift_list(date) {
+    $.ajax({                                        
+        url: "/get_shift_count/" + date + "",
+        success: function (response){            
+            // console.log(response.shift_count);
+            $("#shift_counts tr").remove();
+            $.each( response.shift_count, function(id, user) {                
+                // console.log(user.name.toString());
+                html = `<tr><td><a href="/users/info/${id}">${user.name.toString()}</a></td><td>${user.month.toString()}</td><td>${user.year.toString()}</td></tr>`;
+                $("#shift_counts").append(html);
+            });
+            shifts = response
+            return shifts         
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            console.log(response.responseJSON.errors)
+        }
+    });
 }
 
 function fix_date(date) {
@@ -183,6 +189,7 @@ $(document).ready(function() {
         // var view = $('#calendar').fullCalendar('getView');
         // console.log("1st: " + calDate);
         get_shifts(calDate);
+        update_shift_list(calDate);
         // pageDate.setMonth(pageDate.getMonth()+1);
         // calDate = format_date(pageDate);
     });

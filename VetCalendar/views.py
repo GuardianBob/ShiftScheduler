@@ -160,13 +160,14 @@ def update_user(request):
         return success(request, request.POST['user_id'])
 
 def remove_user(request, remove_id):
-    validate_admin()
+    if validate_user(request.session['user_id'], "admin") is False:
+        return redirect('/')
     user_id = request.session['user_id']
-    if remove_id == '2' or remove_id == '3':
+    if remove_id == '1':
         return redirect('/')
     remove = User.objects.get(id=remove_id)
     remove.delete()
-    return redirect('/')
+    return redirect('/manage_users')
 
 def new_user(request):
     user_id = request.session['user_id']
@@ -174,7 +175,7 @@ def new_user(request):
         return redirect('/') 
     form = Register_Form()
     context = {
-        'nav': get_nav(request),
+        'nav': get_nav(user_id),
         'user_id': user_id,
         'register_form': form,
         'page_title': 'Add User',
@@ -189,15 +190,16 @@ def show_user(request, user_id=None):
         profile = User.objects.get(id=user_id)
     else:
         profile = user
-    shift_types = ShiftType.objects.all()
-    year = datetime.now().year
-    month = datetime.now().month
-    shifts_month = {}
-    shifts_year = {}
-    for s_type in shift_types:
-        m_count = ScheduleShift.objects.filter(user=profile, date__year=year, date__month=month, shift_type=s_type).count()
-        y_count = ScheduleShift.objects.filter(user=profile, date__year=year, shift_type=s_type).count()
-        shifts_month.update({s_type.name : {m_count: y_count}})
+    shifts = get_type_count(datetime.now(), profile.id)
+    # shift_types = ShiftType.objects.all()
+    # year = datetime.now().year
+    # month = datetime.now().month
+    # shifts_month = {}
+    # shifts_year = {}
+    # for s_type in shift_types:
+    #     m_count = ScheduleShift.objects.filter(user=profile, date__year=year, date__month=month, shift_type=s_type).count()
+    #     y_count = ScheduleShift.objects.filter(user=profile, date__year=year, shift_type=s_type).count()
+    #     shifts_month.update({s_type.name : {m_count: y_count}})
         # shifts_year.update({s_type.name : y_count})
     # print(shifts_month, shifts_year) 
     context = {
@@ -206,9 +208,13 @@ def show_user(request, user_id=None):
         'user': user,
         'user_id': user.id,
         # 'shifts_year': shifts_year,
-        'shifts_month': shifts_month,
+        'shifts': shifts,
     }
+    # print(shifts)
     return render(request, 'profile.html', context)
+
+def get_user_shift_count():
+    pass
 
 def manage_users(request):
     if validate_user(request.session['user_id'], "admin") is False:
@@ -249,14 +255,8 @@ def sched_list(request):
 def schedule_shifts(request, date=None):
     if validate_user(request.session['user_id'], "admin") is False:
         return redirect('/') 
-    users = User.objects.all()
-    year = datetime.now().year
-    month = datetime.now().month
-    user_shifts = {}
-    for user in users:
-        m_count = ScheduleShift.objects.filter(user=user, date__year=year, date__month=month).count()
-        y_count = ScheduleShift.objects.filter(user=user, date__year=year).count()
-        user_shifts.update({user.id : {user.last_name: {m_count: y_count}}})
+    date = datetime.now()
+    user_shifts = get_shift_count(date)
     context = {
         'form' : ScheduleShiftForm(),
         'action': 'update_schedule',
@@ -264,6 +264,43 @@ def schedule_shifts(request, date=None):
         'user_shifts': user_shifts,
     }
     return render(request, 'schedule.html', context)
+
+def get_shift_count(date, user=None):
+    if not user == None:
+        users = User.objects.get(id=user.id)
+    else:
+        users = User.objects.all()
+    year = date.year
+    month = date.month
+    user_shifts = {}
+    user_shifts2 = {}
+    for user in users:
+        m_count = ScheduleShift.objects.filter(user=user, date__year=year, date__month=month).count()
+        y_count = ScheduleShift.objects.filter(user=user, date__year=year).count()
+        # user_shifts.update({user.id : {user.last_name: {m_count: y_count}}})
+        user_shifts.update({user.id: {"name": user.last_name, "month": m_count, "year": y_count}})
+    t_month = ScheduleShift.objects.filter(date__year=year, date__month=month).count()
+    t_year = ScheduleShift.objects.filter(date__year=year).count()
+    user_shifts.update({99999: {"name": "Total", "month": t_month, "year": t_year}})
+    # print(user_shifts)
+    return user_shifts
+
+def get_type_count(date, user_id):
+    user = User.objects.get(id=user_id)
+    shift_types = ShiftType.objects.all()
+    year = date.year
+    month = date.month
+    shifts_type = {}
+    for s_type in shift_types:
+        m_count = ScheduleShift.objects.filter(user=user, date__year=year, date__month=month, shift_type=s_type).count()
+        y_count = ScheduleShift.objects.filter(user=user, date__year=year, shift_type=s_type).count()
+        shifts_type.update({s_type.id: {"name": s_type.name, 'month': m_count, "year": y_count}})
+    t_month = ScheduleShift.objects.filter(user=user, date__year=year, date__month=month).count()
+    t_year = ScheduleShift.objects.filter(user=user, date__year=year).count()
+    shifts_type.update({99999: {"name": "Total", "month": t_month, "year": t_year}})
+    return shifts_type
+    
+    
 
 def update_schedule(request):
     if request.method != 'POST':
@@ -364,7 +401,7 @@ def remove_shift(request, shift_id):
     return redirect('/manage_shifts')
 
 def clear_month(request):
-    date = datetime.strptime(request.POST['month_clear'], "%m-%d-%Y")
+    date = datetime.strptime(request.POST['month_clear2'], "%m-%d-%Y")
     year = date.strftime('%Y')
     month = date.strftime('%m')
     ScheduleShift.objects.filter(date__year=year, date__month=month).delete()
@@ -438,7 +475,7 @@ def get_shifts(request, date, user_id=""):
         start_date = datetime.strftime(shift.date, "%Y-%m-%d")  
         start_time = str(shift.shift.start_time)
         events.append({
-            "title" : f'Dr. {shift.user.last_name}',
+            "title" : shift.user.last_name,
             "start" : start_date, 
             "time" : start_time,
             "shift_h": shift.shift.shift,
@@ -454,3 +491,20 @@ def get_shifts(request, date, user_id=""):
     }
     return JsonResponse(response)
 
+def update_shift_count(request, date_in):
+    date = datetime.strptime(date_in, "%Y-%m-%d")
+    shift_count = get_shift_count(date)
+    # print(shift_count)
+    response = {
+        'shift_count': shift_count,
+    }
+    return JsonResponse(response)
+
+def update_type_count(request, date_in, user_id):
+    date = datetime.strptime(date_in, "%Y-%m-%d")
+    type_count = get_type_count(date, user_id)
+    # print(type_count)
+    response = {
+        'shift_count': type_count,
+    }
+    return JsonResponse(response)

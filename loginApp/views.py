@@ -61,7 +61,7 @@ def validate_register(request):
 
 def add_new_user(request):
     validate_register(request)
-    return redirect('/')
+    return redirect('/manage_users')
     
 def new_registration(request):
     if validate_register(request) == True:
@@ -83,11 +83,8 @@ def validate_login(request):
             }
         return render(request, 'login.html', context)
     else:
-        print("logged in!")
         user = User.objects.get(email=request.POST['login_email'])
-        print(user.id)
         request.session["user_id"] = user.id
-        print('redirecting!')
         return redirect('/')
 
 # def success(request):

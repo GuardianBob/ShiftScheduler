@@ -27,5 +27,7 @@ urlpatterns = [
     path('remove_shift_type/<int:type_id>', views.remove_shift_type, name='remove_shift_type'),
     path('get_shifts/<str:date>', views.get_shifts, name="get_shifts"),
     path('get_shifts/<str:date>/<int:user_id>', views.get_shifts, name="get_shifts"),
+    path('get_shift_count/<str:date_in>', views.update_shift_count, name="get_shift_count"),
+    path('get_type_count/<str:date_in>/<int:user_id>', views.update_type_count, name="get_type_count"),
     # path('new_events/<str:events>', views.new_evens, name="new_events"),
 ]

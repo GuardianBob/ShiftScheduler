@@ -72,6 +72,29 @@ function get_shifts(date, user_id) {
     return data;
 }
 
+function update_shift_list(date) {
+    var user_id = $('#user_id').html()
+    // console.log(user_id)
+    $.ajax({                                        
+        url: `/get_type_count/${date}/${user_id}`,
+        success: function (response){            
+            // console.log(response.shift_count);
+            $("#shift_counts tr").remove();
+            $.each( response.shift_count, function(id, user) {                
+                // console.log(user.name.toString());
+                html = `<tr><td>${user.name.toString()}</td><td>${user.month.toString()}</td><td>${user.year.toString()}</td></tr>`;
+                $("#shift_counts").append(html);
+            });
+            shifts = response
+            return shifts         
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            console.log(response.responseJSON.errors)
+        }
+    });
+}
+
 var pageDate = new Date()
 var initDate = format_date(pageDate);
 
@@ -83,28 +106,16 @@ $(document).ready(function() {
     //var schedule = {{ schedule }};
     // console.log(initDate)
     // fillCal(data.calDate, data.schedule);
-    $('.fc-next-button').click(function() {
+    $('.fc-next-button, .fc-prev-button, .fc-today-button').click(function() {
         // console.log("clicked!");
         var getDate = $('#calendar').fullCalendar('getDate').format();
         calDate = format_date(new Date(getDate));
         // var view = $('#calendar').fullCalendar('getView');
         // console.log(view.type);
         get_shifts(calDate, "next");
+        update_shift_list(calDate);
         // pageDate.setMonth(pageDate.getMonth()+1);
         // calDate = format_date(pageDate);
     });
-    $('.fc-prev-button').click(function() {
-        // console.log("clicked!"); 
-        var getDate = $('#calendar').fullCalendar('getDate').format();
-        calDate = format_date(new Date(getDate));
-        // console.log(calDate);
-        get_shifts(calDate, "prev");
-        // pageDate.setMonth(pageDate.getMonth()-1);
-        // calDate = format_date(pageDate);
-    });
-    $('.fc-today-button').click(function() {
-        var getDate = $('#calendar').fullCalendar('getDate').format();
-        calDate = format_date(new Date(getDate));
-        get_shifts(calDate);
-    });
+    
 });  

@@ -10,29 +10,35 @@ class Date_In(TextInput):
 class Time_In(TextInput):
     input_type = 'time'
 
-doctor_objs = User.objects.filter(user_type='doctor').values_list('id', 'last_name')
-doc_list = [('', ' ')]
-for doctor in doctor_objs:
-    doc_list.append((f'{doctor[0]}', f'Dr. {doctor[1]}',))
+def get_doctors():
+    doctor_objs = User.objects.filter(user_type='doctor').values_list('id', 'last_name')
+    doc_list = [('', ' ')]
+    for doctor in doctor_objs:
+        doc_list.append((f'{doctor[0]}', f'{doctor[1]}',))
+    return doc_list
 # print(DOC_LIST)
 
-shift_objs = Shift.objects.all().values_list('id', 'shift')
-shift_list = [('', ' ')]
-for shift in shift_objs:
-    shift_list.append((f'{shift[0]}', f'{shift[1]}',))
+def get_shifts():
+    shift_objs = Shift.objects.all().values_list('id', 'shift')
+    shift_list = [('', ' ')]
+    for shift in shift_objs:
+        shift_list.append((f'{shift[0]}', f'{shift[1]}',))
+    return shift_list
 # print(shift_list)
 
-shiftType_objs = ShiftType.objects.all().values_list('id', 'name')
-shift_type_list = [('', ' ')]
-for shiftType in shiftType_objs:
-    shift_type_list.append((f'{shiftType[0]}', f'{shiftType[1]}',))
-# print(shift_type_list)
+def get_shift_types():
+    shiftType_objs = ShiftType.objects.all().values_list('id', 'name')
+    shift_type_list = [('', ' ')]
+    for shiftType in shiftType_objs:
+        shift_type_list.append((f'{shiftType[0]}', f'{shiftType[1]}',))
+    # print(shift_type_list)
+    return shift_type_list
 
 class ScheduleShiftForm(forms.Form):
-    user = forms.ChoiceField(widget=forms.Select, choices=doc_list, required=True)
+    user = forms.ChoiceField(widget=forms.Select, choices=get_doctors, required=True)
     date = forms.DateTimeField(widget=Date_In, required=True)
-    shift = forms.ChoiceField(widget=forms.Select, choices=shift_list, required=True)
-    shift_type = forms.ChoiceField(widget=forms.Select, choices=shift_type_list, required=True, initial=0)
+    shift = forms.ChoiceField(widget=forms.Select, choices=get_shifts, required=True)
+    shift_type = forms.ChoiceField(widget=forms.Select, choices=get_shift_types, required=True, initial=0)
 
     def __init__(self, *args, **kwargs):
         super(ScheduleShiftForm, self).__init__(*args, **kwargs)
@@ -51,6 +57,7 @@ class ShiftTypeForm(forms.Form):
             self.fields[name].widget.attrs.update({
                 'class' : 'form-control',
             })
+
 
     def clean(self):
         super(ShiftTypeForm, self).clean()
@@ -88,8 +95,8 @@ class ShiftForm(forms.Form):
         return self.cleaned_data
 
 class RequestForm(forms.Form):
-    request_user = forms.ChoiceField(widget=forms.Select, choices=doc_list, required=True)
-    switch_user = forms.ChoiceField(widget=forms.Select, choices=doc_list, required=True)
+    request_user = forms.ChoiceField(widget=forms.Select, choices=get_doctors, required=True)
+    switch_user = forms.ChoiceField(widget=forms.Select, choices=get_doctors, required=True)
     request_type = forms.CharField(max_length=20, widget=forms.Select)
     start_date = forms.DateTimeField(widget=Date_In, required=True)
     end_date = forms.DateTimeField(widget=Date_In, required=True)

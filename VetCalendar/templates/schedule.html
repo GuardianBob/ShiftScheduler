@@ -45,22 +45,17 @@
                     {% endif %}
                 </tr>
             </thead>
-            <tbody>                
-                {% for id, user in user_shifts.items %}
-                    <tr>                        
-                        <td><a href="{% url 'user_info' id %}">
-                            {% for name, count in user.items %}
-                            {{ name }} </a>                           
-                        </td>
-                    {% for m, y in count.items %}
-                        <td>{{ m }}</td>
-                        <td>{{ y }}</td>
-                    {% endfor %}
-                    {% endfor %}
+            <tbody id="shift_counts">       
+                {% for user, val in user_shifts.items %}
+                    <tr>
+                        <td id="user"><a href="{% url 'user_info' user %}">{{ val.name }}</a></td>
+                        <td>{{ val.month }}</td>
+                        <td>{{ val.year }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
         <h3>Add Shifts</h3>
         <form action="{{ action }}" method="post">
             {% csrf_token %}
