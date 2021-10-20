@@ -4,6 +4,8 @@
 * [General Info](#general-info)
 * [Features](#features)
 * [Technologies Involved](#technologies-involved)
+* [Interface](#interface)
+* [Admin Interface](#admin-interface)
 ---
 ### General Info
 The goal of the project is to provide a simplified and fast way for veterinarian practices (and other businesses) to be able to efficiently schedule staff and customize the calendar to meet the needs of the hospital.  A local veterinary emergency hospital was using calendars built in spreadsheets as their staff schedule.  These spreadsheets were manually created and updated with each staff member having to be individually added for each date they were scheduled to work.  Total shifts had to be manually counted bor each staff member for each month and for the full year.  
@@ -36,13 +38,13 @@ Functionality provided for the sponsoring hospital:
 - HTML5
 - CSS3
 - bCrypt v3.2.0
----
 
-## Normal User Interface
+## Interface
+### Normal User Interface
 Regular users are able to login and view the schedule in month, week, or day format.  Users can go to their profile page to view only their shifts plus a count of their shifts for the currently displayed month and year. Users may also edit their contact info and even update their password.
 ![User Interface](https://github.com/GuardianBob/ShiftScheduler/blob/main/User_Calendar.gif)
----
-## Admin User Interface
+
+## Admin Interface
 Administrators are able to do everything a normal user can in addition to being schedule staff members, edit the schedule, add/edit/remove staff from the app, customize the schedule shifts and more.
 
 ### Add/Edit/Remove User
@@ -59,4 +61,4 @@ Administrators can open the schedule view and see a total shift count for all cu
 
 ### Admin Tools
 Administrators can quickly remove multiple/all shifts for a staff member or clear all shifts from an entire month using the Admin Tools interface.
-[Admin Tools](./Admin_Tools.gif)
+![Admin Tools](./Admin_Tools.gif)
