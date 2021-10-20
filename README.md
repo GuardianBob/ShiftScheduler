@@ -39,4 +39,24 @@ Functionality provided for the sponsoring hospital:
 ---
 
 ## Normal User Interface
+Regular users are able to login and view the schedule in month, week, or day format.  Users can go to their profile page to view only their shifts plus a count of their shifts for the currently displayed month and year. Users may also edit their contact info and even update their password.
 ![User Interface](https://github.com/GuardianBob/ShiftScheduler/blob/main/User_Calendar.gif)
+---
+## Admin User Interface
+Administrators are able to do everything a normal user can in addition to being schedule staff members, edit the schedule, add/edit/remove staff from the app, customize the schedule shifts and more.
+
+### Add/Edit/Remove User
+Administrators can manage staff using the Manage Vets interface.  Here they can add new users/staff members, edit staff information, and remove staff members from the system.
+![Editing Users](./Add_User.gif)
+
+### Add/Edit/Remove Shifts
+Administrators can customize the shifts by start/end time, name/type, and by color using the Manage Shifts interface.
+![Editing Shifts](./Add_Edit_Types.gif)
+
+### Scheduling Staff
+Administrators can open the schedule view and see a total shift count for all current staff members by month and year.  Here they can also schedule shifts for staff for multiple days at once by selecting the user, the shift, the shift type, and the dates to schedule the user for.
+![Scheduling Interface](./Schedule_Users.gif)
+
+### Admin Tools
+Administrators can quickly remove multiple/all shifts for a staff member or clear all shifts from an entire month using the Admin Tools interface.
+[Admin Tools](./Admin_Tools.gif)
