@@ -8,7 +8,7 @@
 * [Admin Interface](#admin-interface)
 ---
 ### General Info
-The goal of the project is to provide a simplified and fast way for veterinarian practices (and other businesses) to be able to efficiently schedule staff and customize the calendar to meet the needs of the hospital.  A local veterinary emergency hospital was using calendars built in spreadsheets as their staff schedule.  These spreadsheets were manually created and updated with each staff member having to be individually added for each date they were scheduled to work.  Total shifts had to be manually counted bor each staff member for each month and for the full year.  
+The goal of the project is to provide a simplified and fast way for veterinarian practices (and other businesses) to be able to efficiently schedule staff and customize the calendar to meet the needs of the hospital.  A local veterinary emergency hospital was using calendars built in spreadsheets as their staff schedule.  These spreadsheets were manually created and updated with each staff member having to be individually added for each date they were scheduled to work.  Total shifts had to be manually counted for each staff member for each month and for the full year.  
 
 ### Features
 Functionality provided for the sponsoring hospital:
