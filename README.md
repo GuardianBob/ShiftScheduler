@@ -1,5 +1,5 @@
 # ShiftScheduler
-#### Web-App for planning and scheduling employee shifts
+#### Web-App for planning and scheduling employee shifts powered by Python, Django, and FullCalendar
 ### Table of Contents
 * [General Info](#general-info)
 * [Features](#features)
