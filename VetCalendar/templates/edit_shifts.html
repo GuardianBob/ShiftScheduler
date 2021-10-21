@@ -39,7 +39,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <h3>Add Shift Type</h3>       
+            <h3>Add Shift</h3>       
             <form action="{% url 'update_shifts' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -75,7 +75,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <h3>Add Shift</h3>
+            <h3>Add Shift Type</h3>
             <form action="{% url 'update_types' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
