@@ -17,7 +17,7 @@ function build_cal(cal_date) {
             center: 'title',
             right: 'month,basicWeek,basicDay'
         },
-        defaultDate: '"' + cal_date + '"',
+        defaultDate: cal_date,
         navLinks: true, // can click day/week names to navigate views
         editable: true,
         eventLimit: true, // allow "more" link when too many events

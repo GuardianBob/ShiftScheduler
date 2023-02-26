@@ -17,7 +17,7 @@ function build_cal(cal_date) {
             center: 'title',
             right: 'month,basicWeek,basicDay'
         },
-        defaultDate: '"' + cal_date + '"',
+        defaultDate: '2023-02-24',
         navLinks: true, // can click day/week names to navigate views
         editable: true,
         eventLimit: true, // allow "more" link when too many events
@@ -35,6 +35,7 @@ function format_date(date) {
     var yyyy = date.getFullYear(); 
     // console.log(mm, dd);
     return yyyy + '-' + mm  + '-' + dd
+    // return yyyy + mm + dd
 }
 
 function add_events(schedule){
@@ -75,6 +76,7 @@ function get_shifts(date) {
 }
 
 function update_shift_list(date) {
+    // console.log("update_shift_list: ", date)
     $.ajax({                                        
         url: "/get_shift_count/" + date + "",
         success: function (response){            
@@ -97,8 +99,10 @@ function update_shift_list(date) {
 
 var pageDate = new Date()
 var initDate = format_date(pageDate);
+// var initDate = moment(new Date(pageDate)).format('YYYY/MM/DD');
 
-$(document).ready(function() {               
+$(document).ready(function () {     
+    // console.log(initDate);
     build_cal(initDate);
     // var getDate = $('#calendar').fullCalendar('getDate').format();
     // calDate = format_date(new Date(getDate));
@@ -108,7 +112,7 @@ $(document).ready(function() {
     // fillCal(data.calDate, data.schedule);
     $('.fc-next-button, .fc-prev-button, .fc-today-button, .fc-month-button').click(function() {
         // console.log("clicked!");
-        var getDate = $('#calendar').fullCalendar('getDate').format("MM-DD-YYYY HH:mm");
+        var getDate = $('#calendar').fullCalendar('getDate').format("YYYY-MM-DD");
         // console.log("getDate: " + getDate);
         // console.log("fixed: " + new Date(getDate));
         calDate = format_date(new Date(getDate));
@@ -116,8 +120,8 @@ $(document).ready(function() {
         // $("#month_clear").val(format_date_datepicker(new Date(getDate)));
         // var view = $('#calendar').fullCalendar('getView');
         // console.log("1st: " + calDate);
-        get_shifts(calDate);
-        update_shift_list(calDate);
+        get_shifts(getDate);
+        update_shift_list(getDate);
         // pageDate.setMonth(pageDate.getMonth()+1);
         // calDate = format_date(pageDate);
     });

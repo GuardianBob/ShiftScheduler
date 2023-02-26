@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from .forms import ShiftForm, ShiftTypeForm, ScheduleShiftForm, RequestForm
 from loginApp.forms import UpdateUserForm, UpdatePasswordForm, Register_Form
 from loginApp.models import User, Address
@@ -460,6 +460,9 @@ def remove_shift_type(request, type_id):
 
 def get_shifts(request, date, user_id=""):
     date = datetime.strptime(date, "%Y-%m-%d")
+    start_shifts = date - timedelta(days=12)
+    end_shifts = date + timedelta(days=45)
+    print(f"start: {start_shifts}, end: {end_shifts}")
     year = date.strftime('%Y')
     month = date.strftime('%m')
     if user_id != "":
@@ -468,7 +471,8 @@ def get_shifts(request, date, user_id=""):
         # print(user.last_name)
         shifts = ScheduleShift.objects.filter(user=user, date__year=year, date__month=month) 
     else:
-        shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)     
+        # shifts = ScheduleShift.objects.filter(date__year=year, date__month=month)     
+        shifts = ScheduleShift.objects.filter(date__gte=start_shifts, date__lte=end_shifts)
     events = []
     i = 0
     for shift in shifts:
@@ -492,6 +496,7 @@ def get_shifts(request, date, user_id=""):
     return JsonResponse(response)
 
 def update_shift_count(request, date_in):
+    # print(date_in)
     date = datetime.strptime(date_in, "%Y-%m-%d")
     shift_count = get_shift_count(date)
     # print(shift_count)

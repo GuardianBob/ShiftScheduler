@@ -11,7 +11,7 @@ function build_cal(cal_date) {
             listWeek: { buttonText: 'list week' }
         },
         defaultView: 'month',
-        defaultDate: '"' + cal_date + '"',
+        defaultDate: cal_date,
         events:[             
         ],
         navLinks: true, // can click day/week names to navigate views
@@ -180,7 +180,7 @@ $(document).ready(function() {
     // fillCal(data.calDate, data.schedule);
     $('.fc-next-button, .fc-prev-button, .fc-today-button, .fc-month-button').click(function() {
         // console.log("clicked!");
-        var getDate = $('#calendar').fullCalendar('getDate').format("MM-DD-YYYY HH:mm");
+        var getDate = $('#calendar').fullCalendar('getDate').format("YYYY-MM-DD");
         // console.log("getDate: " + getDate);
         // console.log("fixed: " + new Date(getDate));
         calDate = format_date(new Date(getDate));
@@ -188,8 +188,8 @@ $(document).ready(function() {
         $("#month_clear").val(format_date_datepicker(new Date(getDate)));
         // var view = $('#calendar').fullCalendar('getView');
         // console.log("1st: " + calDate);
-        get_shifts(calDate);
-        update_shift_list(calDate);
+        get_shifts(getDate);
+        update_shift_list(getDate);
         // pageDate.setMonth(pageDate.getMonth()+1);
         // calDate = format_date(pageDate);
     });
@@ -211,10 +211,11 @@ $(document).ready(function() {
     $("#date-select").val(format_date_datepicker(pageDate));
     $("#month_clear").val(format_date_datepicker(pageDate));
     $("#date-select").on('dp.change', function(e) {
-        // console.log(new Date($(this).val()))
-        cDate = format_date(new Date($(this).val()));        
+        console.log(e.date)
+        console.log(new Date(e.date))
+        cDate = format_date(new Date(e.date));   
         $('#calendar').fullCalendar('gotoDate', cDate);
-        // console.log(cDate)
+        console.log(cDate)
         get_shifts(cDate);
         $('#month_clear').datepicker("update", $(this).val());
     });
