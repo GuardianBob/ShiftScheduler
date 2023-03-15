@@ -10,6 +10,7 @@ function build_cal(cal_date) {
     //     //     start: `${item[start]}`
     //     // },
     // })
+    console.log("date: ", cal_date)
     $('#calendar').fullCalendar({        
         timeZone: 'local',
         header: {
@@ -17,7 +18,7 @@ function build_cal(cal_date) {
             center: 'title',
             right: 'month,basicWeek,basicDay'
         },
-        defaultDate: '2023-02-24',
+        defaultDate: cal_date, // 2023-02-24 
         navLinks: true, // can click day/week names to navigate views
         editable: true,
         eventLimit: true, // allow "more" link when too many events

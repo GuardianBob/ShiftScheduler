@@ -29,6 +29,7 @@ def index(request):
     else:
         user = User.objects.get(id=request.session['user_id'])        
         cal_date = date.today()
+        print('date: ', cal_date)
         nav_bar = get_nav(request.session['user_id'])
         context = {
             'cal_date': cal_date.strftime("%Y-%m-%d"),

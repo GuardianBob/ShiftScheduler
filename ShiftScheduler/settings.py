@@ -32,7 +32,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -63,7 +63,8 @@ ROOT_URLCONF = 'ShiftScheduler.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [], # local
+        'DIRS': [os.path.join(BASE_DIR,'templates')], #cPanel
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,9 +84,20 @@ WSGI_APPLICATION = 'ShiftScheduler.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # 'default': { # SQLite Settigns
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+    'default': { # MySQL Settings
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_TABLE'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASS'),
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+        }
     }
 }
 
@@ -128,10 +140,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    'ShiftScheduler/static/',
     'VetCalendar/static/',
+    # 'ShiftScheduler/static/',
 ]
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") #local
+STATIC_ROOT = os.path.join(BASE_DIR, 'public') # cPanel
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "tmp") # cPanel
