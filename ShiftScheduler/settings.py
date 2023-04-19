@@ -28,11 +28,12 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Update timezone back to UTC if deploying
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "False"
 
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
+# ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = ["jmeyer-dev.com", "jbear-creations.com", "jbearcreations.com", "localhost", "127.0.0.1", "vet-schedule.jmeyer-dev.com"]
 
 
 # Application definition
