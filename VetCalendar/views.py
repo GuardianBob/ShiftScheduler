@@ -24,11 +24,17 @@ def validate_admin(request):
         return redirect('/')
 
 def index(request):
+    cal_date = date.today()
     if not 'user_id' in request.session:
-        return redirect('/login')
+        # return redirect('/login')
+        context = {
+            'cal_date': cal_date.strftime("%Y-%m-%d"),
+            # 'schedule' : events,
+            'nav_bar': 'guest_nav.html',
+        }
+        return render(request, 'cal_home.html', context)
     else:
         user = User.objects.get(id=request.session['user_id'])        
-        cal_date = date.today()
         print('date: ', cal_date)
         nav_bar = get_nav(request.session['user_id'])
         context = {
