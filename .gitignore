@@ -163,3 +163,11 @@ Thumbs.db
 *.bat
 ShiftScheduler/settings.py
 .env
+exports/VetCalendar_shifttype.csv
+exports/VetCalendar_shift.csv
+exports/auth_group.csv
+exports/loginApp_address.csv
+exports/loginApp_user.csv
+exports/VetCalendar_request.csv
+exports/VetCalendar_scheduleshift.csv
+exports/VetCalendar_scheduleshift_2.csv

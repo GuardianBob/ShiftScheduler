@@ -1,0 +1,5 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/jbearcre/public_html/python/VetScheduler"
+PassengerBaseURI "/"
+PassengerPython "/home/jbearcre/virtualenv/public_html/python/VetScheduler/3.9/bin/python"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
